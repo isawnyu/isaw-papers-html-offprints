@@ -17,11 +17,12 @@ for i in `seq 1 13`; do
 	        printf "Resize $i\n"
 	        convert "$j" -resize 320x240 "$j"
 	    done
-    elif [ ${#jpgfile[@]} -gt 0 ]; then 
+	fi
+    if  [ ${#jpgfile[@]} -gt 0 ]; then 
 	    for j in $i/images_small/images/*.jpg; do
 	        printf "Resize $i\n"
 	        convert "$j" -resize 320x240 "$j"
     	done
-	fi
+   	fi
 done
 
