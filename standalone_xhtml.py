@@ -3,15 +3,14 @@ from bs4 import BeautifulSoup
 import os
 import re
 
-i64 = []
 
 
-for j in range(9, 10):
 
+for j in range(1, 14):
+	i64 = []
 	# soup
 	with open("isaw-papers-awdl/"+str(j)+"/index.xhtml", "r") as article :
 		soup = BeautifulSoup(article, "lxml")
-	print(soup)
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 
 	# Replacing images by base64 images for the articles that are illustrated in the soup
@@ -44,6 +43,6 @@ for j in range(9, 10):
 
 	# adding the link to the download file
 	with open("index.md", "a") as download_page:
-		download_page.write("<a href='"+str(j)+"/standalone-"+str(j)+".xhtml' download>Click to Download Paper " + str(j) + "</a>\n  <a href='"+str(j)+"/standalone-"+str(j)+".xhtml'>Click to see in browser Paper "+str(j) + "</a>\n\n")
+		download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/standalone-"+str(j)+".xhtml' download>Click to Download</a>  \n<a href='"+str(j)+"/standalone-"+str(j)+".xhtml'>Click to see in browser</a>\n\n")
 
 
