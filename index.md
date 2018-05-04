@@ -6,7 +6,7 @@ The journal is accessible online here : <a href="http://isaw.nyu.edu/publication
 
 Unless otherwise noted all content is distributed under a Creative Commons Atribution license. See <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
 
-Feedback can be left by open an issue on the <ahref="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
+Feedback can be left by open an issue on the <a href="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
 
 <a href='1/standalone-1.xhtml' download>Click to Download Paper 1</a>
   <a href='1/standalone-1.xhtml'>Click to see in browser Paper 1</a>
