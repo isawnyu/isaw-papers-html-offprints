@@ -6,14 +6,15 @@ import re
 i64 = []
 
 
-for j in range(1, 14):
+for j in range(9, 10):
 
 	# soup
 	with open("isaw-papers-awdl/"+str(j)+"/index.xhtml", "r") as article :
 		soup = BeautifulSoup(article, "lxml")
+	print(soup)
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 
-	# Replacing images by base64 images for the articles that are illustrated 
+	# Replacing images by base64 images for the articles that are illustrated in the soup
 	if os.path.isdir(str(j)+"/images_small/images") :
 		for filename in os.listdir(str(j)+"/images_small/images"):
 		    with open(str(j)+"/images_small/images/"+filename, "rb") as imageFile:
@@ -38,11 +39,11 @@ for j in range(1, 14):
 	soup.head.style.append(css)
 
 	# creating the standlone xhtml file
-	with open(str(j)+"/standlone"+str(j)+".xhtml", "w") as article :
+	with open(str(j)+"/standalone-"+str(j)+".xhtml", "w") as article :
 		article.write(str(soup))
 
 	# adding the link to the download file
 	with open("index.md", "a") as download_page:
-		download_page.write("<a href='"+str(j)+"/standlone-"+str(j)+".xhtml' download>Click to Download Paper " + str(j) + "</a>\n<a href='"+str(j)+"/standlone-"+str(j)+".xhtml'>Click to see in browser Paper "+str(j) + "</a>\n\n")
+		download_page.write("<a href='"+str(j)+"/standalone-"+str(j)+".xhtml' download>Click to Download Paper " + str(j) + "</a>\n  <a href='"+str(j)+"/standalone-"+str(j)+".xhtml'>Click to see in browser Paper "+str(j) + "</a>\n\n")
 
 
