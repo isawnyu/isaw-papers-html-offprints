@@ -3,7 +3,17 @@ from bs4 import BeautifulSoup
 import os
 import re
 
+with open("index.md", "w") as download_page:
+	download_page.write("""# ISAW Papers Articles standalone XHTML file
 
+
+
+The journal is accessible online here : <a href="http://isaw.nyu.edu/publications/isaw-papers">http://isaw.nyu.edu/publications/isaw-papers</a>.
+
+Unless otherwise noted all content is distributed under a Creative Commons Atribution license. See <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
+
+Feedback can be left by open an issue on the <a href="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
+""")
 
 
 for j in range(1, 14):
@@ -43,6 +53,7 @@ for j in range(1, 14):
 
 	# adding the link to the download file
 	with open("index.md", "a") as download_page:
-		download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/standalone-"+str(j)+".xhtml' download>Click to Download</a>  \n<a href='"+str(j)+"/standalone-"+str(j)+".xhtml'>Click to see in browser</a>\n\n")
+
+		download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprints.xhtml' download>Click to download</a>  \n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprints.xhtml'>Click to see in browser</a>\n\n")
 
 
