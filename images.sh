@@ -15,13 +15,13 @@ for i in `seq 1 13`; do
 	if [ ${#pngfile[@]} -gt 0 ]; then 
 	    for j in $i/images_small/images/*.png; do
 	        printf "Resize $i\n"
-	        convert "$j" -resize 320x240 "$j"
+	        convert "$j" -resize 1024x1024 "$j"
 	    done
 	fi
     if  [ ${#jpgfile[@]} -gt 0 ]; then 
 	    for j in $i/images_small/images/*.jpg; do
 	        printf "Resize $i\n"
-	        convert "$j" -resize 320x240 "$j"
+	        convert "$j" -resize 1024x1024 "$j"
     	done
    	fi
 done
