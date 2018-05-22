@@ -16,7 +16,7 @@ Feedback can be left by open an issue on the <a href="https://github.com/fmezard
 """)
 
 
-for j in range(11, 12) :
+for j in range(1, 14) :
 	if j != 7 :
 		i64 = []
 
