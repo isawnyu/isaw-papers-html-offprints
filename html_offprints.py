@@ -16,12 +16,11 @@ Feedback can be left by open an issue on the <a href="https://github.com/fmezard
 """)
 
 
-for j in range(1, 14) :
+for j in range(11, 12) :
 	if j != 7 :
 		i64 = []
 
 		# soup
-
 		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
 			head = BeautifulSoup(head, "xml")
 			div_head = head.div
@@ -52,10 +51,7 @@ for j in range(1, 14) :
 		soup.head.append(soup.new_tag("style"))
 		soup.head.style.append(css)
 
-		
-
-		# adding javascript elements for the paragraphs
-		
+		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
 			ids = p["id"]
@@ -63,16 +59,31 @@ for j in range(1, 14) :
 		
 			p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
 			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
-			link.append("↩")
+			link.append("⬈")
 			p.append(link)
 			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+			span.append(ids)
 			p.append(span)
-			p.span.append("#"+ids)
-			#p.append('<a id="'+ids+'anchor" class="id_link" style="color:#aaa;display:none" href="#'+ids+'">↩</a><span class="id_label" id="'+ids+'anchor_label" style="color:aaa;display:none;position:fixed;right:0;bottom:50%">#'+ids+' </span>')
+
+
+		# absolute links for the video
+		if soup.video :
+			mp4s = soup.find_all("source", {"type" : "video/mp4"})
+			for mp4 in mp4s :
+				relative = mp4["src"]
+				absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
+				mp4["src"] = absolute 
+			webms = soup.find_all("source", {"type" : "video/webm"})
+			for webm in webms :
+				relative = webm["src"]
+				absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
+				webm["src"] = absolute 
+
+
+
 		
 
 		# Adding the head.xml
-
 		soup.header.insert_before(div_head )
 
 		# creating the standalone xhtml file
@@ -83,4 +94,5 @@ for j in range(1, 14) :
 		with open("index.md", "a") as download_page:
 
 			download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml' download>Click to download</a>  \n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml'>Click to see in browser</a>\n\n")
+
 
