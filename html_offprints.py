@@ -7,14 +7,12 @@ with open("index.md", "w") as download_page:
 	download_page.write("""# ISAW Papers Articles standalone XHTML file
 
 
-
 The journal is accessible online here : <a href="http://isaw.nyu.edu/publications/isaw-papers">http://isaw.nyu.edu/publications/isaw-papers</a>.
 
 Unless otherwise noted all content is distributed under a Creative Commons Atribution license. See <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
 
 Feedback can be left by open an issue on the <a href="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
 """)
-
 
 for j in range(1, 14) :
 	if j != 7 :
@@ -51,22 +49,22 @@ for j in range(1, 14) :
 		soup.head.append(soup.new_tag("style"))
 		soup.head.style.append(css)
 
-
 		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
 			ids = p["id"]
 			p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
-		
 			p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
 			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
+			link["class"] = "id_link"
 			link.append("⬈")
 			p.append(link)
 			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+			span["class"] = "id_label"
 			span.append(ids)
 			p.append(span)
 
-
+		# adding javascript elements for the figures
 		figures = soup.find_all("figure", {"id": True})
 		if figures :
 			for figure in figures : 
@@ -82,7 +80,6 @@ for j in range(1, 14) :
 					figure.figcaption.append(span)
 					figure.figcaption.append(link)
 
-
 		# absolute links for the video
 		if soup.video :
 			mp4s = soup.find_all("source", {"type" : "video/mp4"})
@@ -96,10 +93,6 @@ for j in range(1, 14) :
 				absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
 				webm["src"] = absolute 
 
-
-
-		
-
 		# Adding the head.xml
 		soup.header.insert_before(div_head )
 
@@ -109,7 +102,6 @@ for j in range(1, 14) :
 
 		# adding the link to the index file
 		with open("index.md", "a") as download_page:
-
 			download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml' download>Click to download</a>  \n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml'>Click to see in browser</a>\n\n")
 
 
