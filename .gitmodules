@@ -1,3 +1,6 @@
 [submodule "isaw-papers-awdl"]
 	path = isaw-papers-awdl
 	url = https://github.com/isawnyu/isaw-papers-awdl.git
+[submodule "isaw-papers"]
+	path = isaw-papers
+	url = https://github.com/FMezard/isaw-papers.git

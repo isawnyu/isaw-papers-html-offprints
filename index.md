@@ -37,11 +37,6 @@ ISAW Papers 6
 <a href='6/isaw-papers-6-offprint.xhtml' download>Click to download</a>  
 <a href='6/isaw-papers-6-offprint.xhtml'>Click to see in browser</a>
 
-ISAW Papers 7  
----
-<a href='7/isaw-papers-7-offprint.xhtml' download>Click to download</a>  
-<a href='7/isaw-papers-7-offprint.xhtml'>Click to see in browser</a>
-
 ISAW Papers 8  
 ---
 <a href='8/isaw-papers-8-offprint.xhtml' download>Click to download</a>  
