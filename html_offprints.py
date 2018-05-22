@@ -51,6 +51,7 @@ for j in range(1, 14) :
 		soup.head.append(soup.new_tag("style"))
 		soup.head.style.append(css)
 
+
 		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
@@ -64,6 +65,22 @@ for j in range(1, 14) :
 			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
 			span.append(ids)
 			p.append(span)
+
+
+		figures = soup.find_all("figure", {"id": True})
+		if figures :
+			for figure in figures : 
+				ids = figure["id"]
+				figure["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
+			
+				figure["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
+				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
+				link.append("⬈")
+				span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+				span.append(ids)
+				if figure.figcaption : 
+					figure.figcaption.append(span)
+					figure.figcaption.append(link)
 
 
 		# absolute links for the video
