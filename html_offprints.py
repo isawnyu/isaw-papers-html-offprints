@@ -22,7 +22,13 @@ for j in range(1, 14) :
 		# soup
 		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
 			head = BeautifulSoup(head, "xml")
+			download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
+			download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
+			download_link.append("<http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml>")
+			download_message.append("Here is the link to download the html file: ")
+			download_message.append(download_link)
 			div_head = head.div
+			div_head.img.insert_before(download_message)
 
 		with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
 			soup = BeautifulSoup(article, "lxml")
