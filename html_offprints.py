@@ -7,24 +7,28 @@ with open("index.md", "w") as download_page:
 	download_page.write("""# ISAW Papers Articles standalone XHTML file
 
 
-
 The journal is accessible online here : <a href="http://isaw.nyu.edu/publications/isaw-papers">http://isaw.nyu.edu/publications/isaw-papers</a>.
 
 Unless otherwise noted all content is distributed under a Creative Commons Atribution license. See <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
 
 Feedback can be left by open an issue on the <a href="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
-""")
 
+""")
 
 for j in range(1, 14) :
 	if j != 7 :
 		i64 = []
 
 		# soup
-
 		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
 			head = BeautifulSoup(head, "xml")
+			download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
+			download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
+			download_link.append("<http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml>")
+			download_message.append("Here is the link to download the html file: ")
+			download_message.append(download_link)
 			div_head = head.div
+			div_head.img.insert_before(download_message)
 
 		with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
 			soup = BeautifulSoup(article, "lxml")
@@ -52,35 +56,62 @@ for j in range(1, 14) :
 		soup.head.append(soup.new_tag("style"))
 		soup.head.style.append(css)
 
-		
-
-		# adding javascript elements for the paragraphs
-		
+		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
 			ids = p["id"]
 			p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
-		
 			p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
-			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
-			link.append("↩")
+			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids )
+			link["class"] = "id_link"
+			link.append("⬈")
 			p.append(link)
 			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+			span["class"] = "id_label"
+			span.append(ids)
 			p.append(span)
-			p.span.append("#"+ids)
-			#p.append('<a id="'+ids+'anchor" class="id_link" style="color:#aaa;display:none" href="#'+ids+'">↩</a><span class="id_label" id="'+ids+'anchor_label" style="color:aaa;display:none;position:fixed;right:0;bottom:50%">#'+ids+' </span>')
-		
+
+		# adding javascript elements for the figures
+		figures = soup.find_all("figure", {"id": True})
+		if figures :
+			for figure in figures : 
+				ids = figure["id"]
+				figure["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
+			
+				figure["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
+				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids)
+				link.append("⬈")
+				span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+				span.append(ids)
+				if figure.figcaption : 
+					figure.figcaption.append(span)
+					figure.figcaption.append(link)
+
+		# absolute links for the video
+		if soup.video :
+			mp4s = soup.find_all("source", {"type" : "video/mp4"})
+			for mp4 in mp4s :
+				relative = mp4["src"]
+				absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
+				mp4["src"] = absolute 
+			webms = soup.find_all("source", {"type" : "video/webm"})
+			for webm in webms :
+				relative = webm["src"]
+				absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
+				webm["src"] = absolute 
 
 		# Adding the head.xml
-
-		soup.header.insert_before(div_head )
+		soup.header.insert(0, div_head)
 
 		# creating the standalone xhtml file
 		with open(str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml", "w") as article :
 			article.write(str(soup))
 
+		with open (str(j)+"/index.xhtml", "w") as article :
+			article.write(str(soup))
+
 		# adding the link to the index file
 		with open("index.md", "a") as download_page:
-
 			download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml' download>Click to download</a>  \n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml'>Click to see in browser</a>\n\n")
+
 
