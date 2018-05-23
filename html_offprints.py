@@ -107,6 +107,9 @@ for j in range(1, 14) :
 		with open(str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml", "w") as article :
 			article.write(str(soup))
 
+		with open (str(j)+"/index.xhtml", "w") as article :
+			article.write(str(soup))
+
 		# adding the link to the index file
 		with open("index.md", "a") as download_page:
 			download_page.write("ISAW Papers "+str(j)+"  \n---\n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml' download>Click to download</a>  \n<a href='"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml'>Click to see in browser</a>\n\n")
