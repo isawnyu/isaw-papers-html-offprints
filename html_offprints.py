@@ -35,17 +35,21 @@ for j in range(1, 14) :
 		images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 
 		# Replacing images by base64 images for the articles that are illustrated in the soup
-		if os.path.isdir(str(j)+"/images_small/images") :
-			for filename in os.listdir(str(j)+"/images_small/images"):
-			    with open(str(j)+"/images_small/images/"+filename, "rb") as imageFile:
-			        im64 = base64.b64encode(imageFile.read())
-			        i64.append(str(im64).replace("b'", "").replace("'",""))
+		# CA VA PAS DU TOUT !!! A PRIORI AS BESOIN DE FILENAME
+		#if os.path.isdir(str(j)+"/images") :
+			#for filename in os.listdir(str(j)+"/images"):
+			    #with open(str(j)+"/images/"+filename, "rb") as imageFile:
+			        #im64 = base64.b64encode(imageFile.read())
+			        #i64.append(str(im64).replace("b'", "").replace("'",""))
 
-			for i in range(0, len(images)):
-				source = images[i]["src"]
-				source = source.replace("images/", "").replace(".png", "").replace(".jpg", "")
-				images[i].wrap(soup.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+source))
-				images[i]["src"] = "data:image/png;base64,"+str(i64[i])
+		for i in range(0, len(images)):
+			source = images[i]["src"]
+			with open(str(j)+"/"+source, "rb") as imageFile:
+				im64 = base64.b64encode(imageFile.read())
+				i64.append(str(im64).replace("b'", "").replace("'",""))
+			source = source.replace("images/", "").replace(".png", "").replace(".jpg", "")
+			images[i].wrap(soup.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+source))
+			images[i]["src"] = "data:image/png;base64,"+str(i64[i])
 
 		# putting the css in the xhtml file et virer le lien vers le CSS 
 		css_link = soup.find("link", {"rel" : re.compile("stylesheet*")})
