@@ -12,6 +12,7 @@ The journal is accessible online here : <a href="http://isaw.nyu.edu/publication
 Unless otherwise noted all content is distributed under a Creative Commons Atribution license. See <a href="http://creativecommons.org/licenses/by/4.0/">http://creativecommons.org/licenses/by/4.0/</a>.
 
 Feedback can be left by open an issue on the <a href="https://github.com/fmezard/isaw-papers-xhtml-standalone/">GitHub repository</a> that hosts this content.
+
 """)
 
 for j in range(1, 14) :
@@ -55,7 +56,7 @@ for j in range(1, 14) :
 			ids = p["id"]
 			p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
 			p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
-			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
+			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids )
 			link["class"] = "id_link"
 			link.append("⬈")
 			p.append(link)
@@ -72,7 +73,7 @@ for j in range(1, 14) :
 				figure["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
 			
 				figure["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
-				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="#"+ids )
+				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids)
 				link.append("⬈")
 				span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
 				span.append(ids)
@@ -94,7 +95,7 @@ for j in range(1, 14) :
 				webm["src"] = absolute 
 
 		# Adding the head.xml
-		soup.header.insert_before(div_head )
+		soup.header.insert(0, div_head)
 
 		# creating the standalone xhtml file
 		with open(str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml", "w") as article :
