@@ -63,17 +63,18 @@ for j in range(1, 14) :
 		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
-			ids = p["id"]
-			p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
-			p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
-			link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids )
-			link["class"] = "id_link"
-			link.append("⬈")
-			p.append(link)
-			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
-			span["class"] = "id_label"
-			span.append(ids)
-			p.append(span)
+			if not p.parent.name == "figcaption" :
+				ids = p["id"]
+				p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
+				p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
+				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids )
+				link["class"] = "id_link"
+				link.append("⬈")
+				p.append(link)
+				span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
+				span["class"] = "id_label"
+				span.append(ids)
+				p.append(span)
 
 		# adding javascript elements for the figures
 		figures = soup.find_all("figure", {"id": True})
