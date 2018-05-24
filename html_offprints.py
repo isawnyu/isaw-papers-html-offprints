@@ -34,13 +34,7 @@ for j in range(1, 14) :
 			soup = BeautifulSoup(article, "lxml")
 		images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 
-		# Replacing images by base64 images for the articles that are illustrated in the soup
-		# CA VA PAS DU TOUT !!! A PRIORI AS BESOIN DE FILENAME
-		#if os.path.isdir(str(j)+"/images") :
-			#for filename in os.listdir(str(j)+"/images"):
-			    #with open(str(j)+"/images/"+filename, "rb") as imageFile:
-			        #im64 = base64.b64encode(imageFile.read())
-			        #i64.append(str(im64).replace("b'", "").replace("'",""))
+		
 
 		for i in range(0, len(images)):
 			source = images[i]["src"]
@@ -63,7 +57,7 @@ for j in range(1, 14) :
 		# adding javascript elements for the paragraphs		
 		paragraphs = soup.find_all("p", {"id": True})
 		for p in paragraphs :
-			if not p.parent.name == "figcaption" :
+			if not p.parent.name == "figcaption" and not p.img:
 				ids = p["id"]
 				p["onmouseleave"] = "document.getElementById('"+ids+"anchor').style.display='none';document.getElementById('"+ids+"anchor_label').style.display='none';"
 				p["onmouseover"] = "document.getElementById('"+ids+"anchor').style.display='';document.getElementById('"+ids+"anchor_label').style.display='';" 
