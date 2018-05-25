@@ -2,14 +2,21 @@ import base64
 from bs4 import BeautifulSoup
 import os
 import re
+from wand.image import Image
+from wand.display import display
 
 def image64(images, path) :
 		# encoding images 
 		for i in range(0, len(images)):
 			source = images[i]["src"]
-			with open(path+source, "rb") as imageFile:
-				im64 = base64.b64encode(imageFile.read())
+			with Image(filename=str(path)+str(source)) as imageFile: 
+				imageFile.transform('','1024x1024')
+				imageFile.save(filename=str(j)+"/"+str(source))
+			with open(str(j)+"/"+str(source), "rb") as image:
+				print(image)
+				im64 = base64.b64encode(image.read())
 				i64.append(str(im64).replace("b'", "").replace("'",""))
+			os.remove(str(j)+"/"+str(source))
 			source = source.replace("images/", "").replace(".png", "").replace(".jpg", "")
 			images[i].wrap(soup.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+source))
 			images[i]["src"] = "data:image/png;base64,"+str(i64[i])
@@ -74,7 +81,7 @@ for j in range(1, 14) :
 	# head.xml (do no exist in 7 / yet to be solved !)
 	if j != 7:
 		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
-			head = BeautifulSoup(head, "xml")
+			head = BeautifulSoup(head, "html.parser")
 			download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
 			download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
 			download_link.append("<http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml>")
@@ -85,9 +92,9 @@ for j in range(1, 14) :
 
 	# image64
 	with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
-		soup = BeautifulSoup(article, "lxml")
+		soup = BeautifulSoup(article,"html.parser")
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
-	path = str(j)+"/"
+	path = "isaw-papers/isaw-papers-"+str(j)+"/"
 	image64(images, path)
 	
 	css(soup)
@@ -117,11 +124,13 @@ for j in range(1, 14) :
 				for el in os.listdir('isaw-papers/isaw-papers-'+ str(j)+ '/'+ str(element)):
 					if re.match("isaw-papers-"+str(j)+"-*", str(el)):
 						with open ('isaw-papers/isaw-papers-'+str(j)+'/'+ str(element) + '/'+ str(el), "r") as article : 
-							soup_7 = BeautifulSoup(article, "lxml")
+							soup_7 = BeautifulSoup(article, "html.parser")
 						if soup_7.img :
 							images = soup_7.find_all("img") 
 							path = "isaw-papers/isaw-papers-"+str(j)+"/"+str(element) + "/"
-							image64(images, path)
+							print(element)
+							if element != "meadows-gruber" and element != "pett" :
+								image64(images, path)
 						css(soup_7)
 						js_figures(soup_7)
 						js_p(soup_7)
