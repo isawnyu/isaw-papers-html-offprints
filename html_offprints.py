@@ -80,21 +80,20 @@ Feedback can be left by open an issue on the <a href="https://github.com/fmezard
 
 """)
 
-for j in range(4, 14) :
+for j in range(1, 3) :
 	i64 = []
 	div_head = ""
 
-	# head.xml (do no exist in 7 / yet to be solved !)
-	if j != 7:
-		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
-			head = BeautifulSoup(head, "html.parser")
-			download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
-			download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
-			download_link.append("single file")
-			download_message.append("This article can be downloaded as a ")
-			download_message.append(download_link)
-			div_head = head.div
-			div_head.img.insert_before(download_message)
+	# adding the gray header
+	with open(str(j)+"/head.xml", "r") as head:
+		head = BeautifulSoup(head, "html.parser")
+		download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
+		download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
+		download_link.append("single file")
+		download_message.append("This article can be downloaded as a ")
+		download_message.append(download_link)
+		div_head = head.div
+		div_head.append(download_message)
 
 	# image64
 	with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
