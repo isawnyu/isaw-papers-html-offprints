@@ -5,7 +5,7 @@ import re
 from wand.image import Image
 from wand.display import display
 
-def image64(images, path) :
+def image64(images, path, soup) :
 		# encoding images 
 		for i in range(0, len(images)):
 			source = images[i]["src"]
@@ -95,7 +95,7 @@ for j in range(1, 14) :
 		soup = BeautifulSoup(article,"html.parser")
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 	path = "isaw-papers/isaw-papers-"+str(j)+"/"
-	image64(images, path)
+	image64(images, path, soup)
 	
 	css(soup)
 	js_p(soup)
@@ -117,7 +117,7 @@ for j in range(1, 14) :
 	if div_head :
 		soup.header.insert(0, div_head)
 
-	# Collection of articles
+	# Collection of articles ISAW Papers 7
 	if j == 7 : 
 		for element in os.listdir('isaw-papers/isaw-papers-'+str(j)):
 			if os.path.isdir('isaw-papers/isaw-papers-'+str(j)+ '/'+str(element)):
@@ -130,7 +130,7 @@ for j in range(1, 14) :
 							path = "isaw-papers/isaw-papers-"+str(j)+"/"+str(element) + "/"
 							print(element)
 							if element != "meadows-gruber" and element != "pett" :
-								image64(images, path)
+								image64(images, path, soup)
 						css(soup_7)
 						js_figures(soup_7)
 						js_p(soup_7)
