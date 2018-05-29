@@ -1,6 +1,7 @@
 import base64
 from bs4 import BeautifulSoup
 import os
+import shutil
 import re
 from wand.image import Image
 from wand.display import display
@@ -11,15 +12,20 @@ def image64(images, path, soup) :
 			source = images[i]["src"]
 			with Image(filename=str(path)+str(source)) as imageFile: 
 				imageFile.transform('','1024x1024')
+				if not os.path.isdir(str(j)+"/images"):
+					os.makedirs(str(j)+"/images")
 				imageFile.save(filename=str(j)+"/"+str(source))
+			
 			with open(str(j)+"/"+str(source), "rb") as image:
 				print(image)
 				im64 = base64.b64encode(image.read())
 				i64.append(str(im64).replace("b'", "").replace("'",""))
-			os.remove(str(j)+"/"+str(source))
+			
 			source = source.replace("images/", "").replace(".png", "").replace(".jpg", "")
 			images[i].wrap(soup.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+source))
 			images[i]["src"] = "data:image/png;base64,"+str(i64[i])
+			if os.path.isdir(str(j)+"/images"):
+				shutil.rmtree(str(j)+"/images")
 
 def css(soup) :
 		css_link = soup.find("link", {"rel" : re.compile("stylesheet*")})
@@ -41,7 +47,7 @@ def js_figures(soup):
 				link = soup.new_tag("a", id=ids+"anchor", style="color:#aaa;display:none", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/#"+ids)
 				link.append("⬈")
 				span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
-				span.append(ids)
+				span.append("#"+ids)
 				if figure.figcaption : 
 					figure.figcaption.append(span)
 					figure.figcaption.append(link)
@@ -59,8 +65,19 @@ def js_p(soup) :
 			p.append(link)
 			span = soup.new_tag("span", id=ids+'anchor_label', style="color:#aaa;display:none;position:fixed;right:0;bottom:50%" )
 			span["class"] = "id_label"
-			span.append(ids)
+			span.append("#"+ids)
 			p.append(span)
+
+def header(head):
+	head = BeautifulSoup(head, "html.parser")
+	download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
+	download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
+	download_link.append("single file")
+	download_message.append("This article can be downloaded as a ")
+	download_message.append(download_link)
+	div_head = head.div
+	div_head.append(download_message)
+	return div_head
 
 with open("index.md", "w") as download_page:
 	download_page.write("""# ISAW Papers Articles standalone XHTML file
@@ -78,17 +95,8 @@ for j in range(1, 14) :
 	i64 = []
 	div_head = ""
 
-	# head.xml (do no exist in 7 / yet to be solved !)
-	if j != 7:
-		with open("isaw-papers-awdl/"+str(j)+"/head.xml", "r") as head:
-			head = BeautifulSoup(head, "html.parser")
-			download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
-			download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
-			download_link.append("<http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml>")
-			download_message.append("Here is the link to download the html file: ")
-			download_message.append(download_link)
-			div_head = head.div
-			div_head.img.insert_before(download_message)
+	# adding the gray header
+	
 
 	# image64
 	with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
@@ -96,10 +104,14 @@ for j in range(1, 14) :
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 	path = "isaw-papers/isaw-papers-"+str(j)+"/"
 	image64(images, path, soup)
-	
 	css(soup)
 	js_p(soup)
 	js_figures(soup)
+
+	# header
+	with open(str(j)+"/head.xml", "r") as head:
+		div_head = header(head)
+		soup.header.insert(0, div_head)
 	
 	# Link to videos
 	if soup.video :
@@ -114,8 +126,8 @@ for j in range(1, 14) :
 			absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
 			webm["src"] = absolute 
 
-	if div_head :
-		soup.header.insert(0, div_head)
+	
+		
 
 	# Collection of articles ISAW Papers 7
 	if j == 7 : 
@@ -134,13 +146,17 @@ for j in range(1, 14) :
 						css(soup_7)
 						js_figures(soup_7)
 						js_p(soup_7)
-
+						with open(str(j)+'/'+ str(element) + "/head.xml", "r") as head:
+							div_head = header(head)
+							soup_7.header.insert(0, div_head)
+	
 						if not os.path.exists(str(j)+'/'+ str(element)):
 							os.makedirs(str(j)+'/'+ str(element))
 
 						with open (str(j)+'/'+ str(element) + '/'+ str(el), "w") as article : 
 							article.write(str(soup_7))
-
+						with open (str(j)+'/'+ str(element) + "/index.xhtml", "w") as article : 
+							article.write(str(soup_7))
 
 	# creating the standalone xhtml file
 	with open(str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml", "w") as article :
