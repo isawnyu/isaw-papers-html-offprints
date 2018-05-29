@@ -143,7 +143,7 @@ Feedback can be left by open an issue on the <a href="https://github.com/fmezard
 
 """)
 
-for j in range(7, 8) :
+for j in range(1, 14) :
 	# Opening every articles and creating a BeautifulSoup object with all the modifications
 	with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
 		soup = BeautifulSoup(article,"html.parser")
@@ -169,7 +169,6 @@ for j in range(7, 8) :
 						if soup_7.img :
 							images = soup_7.find_all("img") 
 							path = "isaw-papers/isaw-papers-"+str(j)+"/"+str(element) + "/"
-							print(element)
 							if element != "meadows-gruber" and element != "pett" :
 								image64(images, path, soup)
 						css(soup_7)
@@ -178,7 +177,15 @@ for j in range(7, 8) :
 						video(soup_7)
 						with open(str(j)+'/'+ str(element) + "/head.xml", "r") as head:
 							header(head, soup_7)
-							
+
+						paragraphs_footer = soup_7.footer.find_all("p")
+
+						for p in paragraphs_footer : 
+							p["style"] = "margin-top:1em;text-align:center;color:gray"
+							links = p.find_all("a")
+							for link in links :
+								link["style"] = "color:gray"
+
 						if not os.path.exists(str(j)+'/'+ str(element)):
 							os.makedirs(str(j)+'/'+ str(element))
 
