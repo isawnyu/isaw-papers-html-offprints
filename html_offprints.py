@@ -68,6 +68,17 @@ def js_p(soup) :
 			span.append("#"+ids)
 			p.append(span)
 
+def header(head):
+	head = BeautifulSoup(head, "html.parser")
+	download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
+	download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
+	download_link.append("single file")
+	download_message.append("This article can be downloaded as a ")
+	download_message.append(download_link)
+	div_head = head.div
+	div_head.append(download_message)
+	return div_head
+
 with open("index.md", "w") as download_page:
 	download_page.write("""# ISAW Papers Articles standalone XHTML file
 
@@ -80,20 +91,12 @@ Feedback can be left by open an issue on the <a href="https://github.com/fmezard
 
 """)
 
-for j in range(1, 3) :
+for j in range(1, 14) :
 	i64 = []
 	div_head = ""
 
 	# adding the gray header
-	with open(str(j)+"/head.xml", "r") as head:
-		head = BeautifulSoup(head, "html.parser")
-		download_message = head.new_tag("p", style="text-align:center;margin-top:1em")
-		download_link = head.new_tag("a", href="http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/isaw-papers-"+str(j)+"-offprint.xhtml")
-		download_link.append("single file")
-		download_message.append("This article can be downloaded as a ")
-		download_message.append(download_link)
-		div_head = head.div
-		div_head.append(download_message)
+	
 
 	# image64
 	with open("isaw-papers/isaw-papers-"+str(j)+"/isaw-papers-"+str(j)+".xhtml", "r") as article :
@@ -101,10 +104,14 @@ for j in range(1, 3) :
 	images = soup.find_all("img", {"src" : re.compile("images/*")}) 
 	path = "isaw-papers/isaw-papers-"+str(j)+"/"
 	image64(images, path, soup)
-	
 	css(soup)
 	js_p(soup)
 	js_figures(soup)
+
+	# header
+	with open(str(j)+"/head.xml", "r") as head:
+		div_head = header(head)
+		soup.header.insert(0, div_head)
 	
 	# Link to videos
 	if soup.video :
@@ -119,8 +126,8 @@ for j in range(1, 3) :
 			absolute = "http://dlib.nyu.edu/awdl/isaw/isaw-papers/"+str(j)+"/"+relative
 			webm["src"] = absolute 
 
-	if div_head :
-		soup.header.insert(0, div_head)
+	
+		
 
 	# Collection of articles ISAW Papers 7
 	if j == 7 : 
@@ -139,7 +146,10 @@ for j in range(1, 3) :
 						css(soup_7)
 						js_figures(soup_7)
 						js_p(soup_7)
-
+						with open(str(j)+'/'+ str(element) + "/head.xml", "r") as head:
+							div_head = header(head)
+							soup_7.header.insert(0, div_head)
+	
 						if not os.path.exists(str(j)+'/'+ str(element)):
 							os.makedirs(str(j)+'/'+ str(element))
 
